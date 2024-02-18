@@ -1,0 +1,10 @@
+{
+  "headless": false,
+  "args": [
+    "--start-maximized",
+    "--disable-application-cache",
+    "--no-first-run",
+    "--no_viewport=True"
+  ],
+  "slowMo": 50
+}

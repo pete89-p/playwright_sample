@@ -1,0 +1,7 @@
+{
+  "headless": false,
+  "args": [
+    "--disable-application-cache"
+  ],
+  "slowMo": 50
+}
