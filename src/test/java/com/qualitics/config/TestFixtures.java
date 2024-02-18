@@ -25,13 +25,13 @@ public class TestFixtures {
 	@SneakyThrows
 	@BeforeAll
 	void launchBrowser() {
-		ExtentSparkReporter htmlReporter = new ExtentSparkReporter("extentReports.html");
+		ExtentSparkReporter htmlReporter = new ExtentSparkReporter("target/extentReports.html");
 		extent = new ExtentReports();
 		extent.attachReporter(htmlReporter);
 
 		var browserType = System.getProperty("browser");
 		if (browserType == null) {
-			throw new IllegalArgumentException("BROWSER environment variable is not set.");
+			throw new IllegalArgumentException("Browser property variable is not set.");
 		}
 
 		var configPath = "src/test/resources/config/browsers/" + browserType.toLowerCase() + ".json";
@@ -61,9 +61,9 @@ public class TestFixtures {
 	}
 
 	@AfterEach
-	public void afterMethod(TestInfo testInfo) {
+	void afterMethod(TestInfo testInfo) {
 
-		var testName = testInfo.getDisplayName(); // Tutaj podaj nazwę swojego testu
+		var testName = testInfo.getDisplayName();
 		var filePath = "screenshots" + File.separator + testName + ".png";
 		test.addScreenCaptureFromPath(filePath, testName);
 
@@ -72,7 +72,6 @@ public class TestFixtures {
 		} else {
 			test.pass("Test passed");
 		}
-
 
 		if (context != null) {
 			context.close();
