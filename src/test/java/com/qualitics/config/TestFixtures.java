@@ -2,6 +2,8 @@ package com.qualitics.config;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.google.gson.Gson;
 import com.microsoft.playwright.*;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestFixtures {
@@ -25,7 +28,7 @@ public class TestFixtures {
 	@SneakyThrows
 	@BeforeAll
 	void launchBrowser() {
-		ExtentSparkReporter htmlReporter = new ExtentSparkReporter("target/extentReports.html");
+		ExtentSparkReporter htmlReporter = new ExtentSparkReporter("target/extentReport.html");
 		extent = new ExtentReports();
 		extent.attachReporter(htmlReporter);
 
@@ -60,18 +63,22 @@ public class TestFixtures {
 		page = context.newPage();
 	}
 
+	@SneakyThrows
 	@AfterEach
 	void afterMethod(TestInfo testInfo) {
-
-		var testName = testInfo.getDisplayName();
-		var filePath = "screenshots" + File.separator + testName + ".png";
-		test.addScreenCaptureFromPath(filePath, testName);
-
 		if (testInfo.getTags().contains("fail")) {
-			test.fail("Test failed");
+			var screenshotName = "screenshot.png";
+			var screenshotPath = "screenshots/"+screenshotName;
+			var path = Paths.get(screenshotPath);
+			page.screenshot(new Page.ScreenshotOptions().setPath(path));
+			screenshotPath = screenshotPath.replace(File.separator, "/");
+			test.addScreenCaptureFromPath("/"+screenshotPath, "Screenshot for " + testInfo.getDisplayName());
+			test.log(Status.FAIL,   "Test failed");
 		} else {
-			test.pass("Test passed");
+			test.log(Status.PASS, "Test passed");
 		}
+
+		extent.flush();
 
 		if (context != null) {
 			context.close();
@@ -83,8 +90,6 @@ public class TestFixtures {
 		if (playwright != null) {
 			playwright.close();
 		}
-
-		extent.flush();
 	}
 
 }
