@@ -1,15 +1,24 @@
 package com.qualitics.test;
 
+import com.aventstack.extentreports.Status;
 import com.qualitics.config.TestFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class SampleTest extends TestFixtures {
+class SampleTest extends TestFixtures {
 
 	@Test()
-	@DisplayName("Sample Test with Playwright and Extent Reports")
-	public void test() {
-		page.navigate("https:/wyborcza.pl");
+	@DisplayName("natemat")
+	public void sevenTest() {
+		test.log(Status.PASS, "Opening https://natemat.pl page");
+		page.navigate("https://natemat.pl");
 	}
 
+	@Test()
+	@DisplayName("interia")
+	public void eightTest() {
+		test.log(Status.PASS, "Opening https://interia.pl page");
+		page.navigate("https://interia.pl");
+	}
 }
+
